@@ -1,0 +1,10 @@
+fastapi==0.111.0
+jupyter
+numpy
+scikit-learn
+pandas
+scikit-learn
+matplotlib
+apache-airflow-providers-amazon==9.0.0
+boto3
+apache-airflow[aws]
