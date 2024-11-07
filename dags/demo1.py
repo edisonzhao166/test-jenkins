@@ -28,7 +28,7 @@ with DAG(dag_id="demo1", start_date=datetime(2022, 1, 1), schedule="@once") as d
     def pd_access():
         url = 'https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv'
         df = pd.read_csv(url)
-        df.to_csv("./aaa.csv", index=False)
+        df.to_csv("./aaaa.csv", index=False)
 
 
     upload_to_s3 = LocalFilesystemToS3Operator(
