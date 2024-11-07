@@ -72,6 +72,8 @@ x-airflow-common:
     # The following line can be used to set a custom config file, stored in the local config folder
     # If you want to use it, outcomment it and replace airflow.cfg with the name of your config file
     # AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
+    AWS_ACCESS_KEY_ID: AKIATHVQLMYJA4SLWSNJ
+    AWS_SECRET_ACCESS_KEY: lIAG3PfHbmr2ltGJWACFsNNNxcZFyMJa+WXlAz9I
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
@@ -127,7 +129,7 @@ services:
     <<: *airflow-common
     command: webserver
     ports:
-      - "8080:8080"
+      - "8081:8080"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
       interval: 30s
@@ -257,6 +259,7 @@ services:
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}:/sources
 
+
   airflow-cli:
     <<: *airflow-common
     profiles:
@@ -291,6 +294,20 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+#  mlflow:
+#    image: python:3.8
+#    container_name: mlflow
+#    environment:
+#      - MLFLOW_TRACKING_URI=http://0.0.0.0:5000
+#    ports:
+#      - "5000:5000"
+#    volumes:
+#      - ./mlruns:/mlflow/mlruns  # Store runs on the host
+#    command: >
+#      /bin/sh -c "pip install mlflow && mlflow server \
+#                  --backend-store-uri sqlite:///mlflow.db \
+#                  --default-artifact-root /mlflow/mlruns \
+#                  --host 0.0.0.0"
 
 #  jenkins:
 #    image: jenkins/jenkins:jdk17  # Use the Long Term Support version

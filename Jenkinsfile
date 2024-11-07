@@ -5,7 +5,7 @@ pipeline {
         REPO_URL = 'https://github.com/edisonzhao166/test-jenkins.git' // Replace with your repo URL
         AIRFLOW_DAG_ID = 'demo1' // Replace with your Airflow DAG ID
         COMPOSE_FILE = 'docker-compose.yaml' // Name of the docker-compose file
-        BRANCH_NAME = 'ci2'
+        BRANCH_NAME = 'ci4'
     }
 
     stages {
@@ -30,7 +30,7 @@ pipeline {
                 // Trigger the Airflow DAG for model training and evaluation
                 script {
                     sh """
-                    curl -X POST http://localhost:8080/api/v1/dags/${AIRFLOW_DAG_ID}/dagRuns \
+                    curl -X POST http://localhost:8081/api/v1/dags/demo1/dagRuns \
                     -H "Content-Type: application/json" \
                     -u airflow:airflow \
                     -d '{"conf":{}}'
@@ -62,14 +62,14 @@ pipeline {
     post {
         always {
             // Stop and remove Docker containers
-            sh 'docker stop $(docker ps -q)'
-            sh 'docker rm $(docker ps -aq)'
+            sh 'docker ps -q | xargs -r docker stop'
+            sh 'docker ps -aq | xargs -r docker rm'
         }
         success {
             echo 'Pipeline completed successfully.'
         }
         failure {
-            echo 'Pipeline failed. Check logs for details!'
+            echo 'Pipeline failed. Check logs for details!!!!!!'
         }
     }
 }
