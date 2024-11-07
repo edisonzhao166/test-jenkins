@@ -30,7 +30,7 @@ pipeline {
                 // Trigger the Airflow DAG for model training and evaluation
                 script {
                     sh """
-                    curl -X POST http://localhost:8080/api/v1/dags/${AIRFLOW_DAG_ID}/dagRuns \
+                    curl -X POST http://localhost:8080/api/v1/dags/demo1/dagRuns \
                     -H "Content-Type: application/json" \
                     -u airflow:airflow \
                     -d '{"conf":{}}'
@@ -62,8 +62,8 @@ pipeline {
     post {
         always {
             // Stop and remove Docker containers
-            sh 'docker stop $(docker ps -q)'
-            sh 'docker rm $(docker ps -aq)'
+            sh 'docker ps -q | xargs -r docker stop'
+            sh 'docker ps -aq | xargs -r docker rm'
         }
         success {
             echo 'Pipeline completed successfully.'
