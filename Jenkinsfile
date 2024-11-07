@@ -38,30 +38,31 @@ pipeline {
             }
         }
 
-        stage('Monitor DAG') {
-            steps {
-                // Monitor DAG status until completion
-                script {
-                    def dag_status = ""
-                    while (dag_status != "success") {
-                        dag_status = sh(
-                            script: "docker exec -it airflow_webserver airflow dags state ${AIRFLOW_DAG_ID} $(date +%Y-%m-%d) | tail -n 1",
-                            returnStdout: true
-                        ).trim()
-                        if (dag_status == "failed") {
-                            error("DAG ${AIRFLOW_DAG_ID} failed.")
-                        }
-                        sleep(time: 30, unit: 'SECONDS')
-                    }
-                }
-            }
-        }
+//         stage('Monitor DAG') {
+//             steps {
+//                 // Monitor DAG status until completion
+//                 script {
+//                     def dag_status = ""
+//                     while (dag_status != "success") {
+//                         dag_status = sh(
+//                             script: "docker exec -it airflow_webserver airflow dags state ${AIRFLOW_DAG_ID} $(date +%Y-%m-%d) | tail -n 1",
+//                             returnStdout: true
+//                         ).trim()
+//                         if (dag_status == "failed") {
+//                             error("DAG ${AIRFLOW_DAG_ID} failed.")
+//                         }
+//                         sleep(time: 30, unit: 'SECONDS')
+//                     }
+//                 }
+//             }
+//         }
     }
 
     post {
         always {
             // Stop and remove Docker containers
-            sh "docker-compose -f ${COMPOSE_FILE} down"
+            sh "docker stop $(docker ps -q)"
+            sh "docker rm $(docker ps -aq)"
         }
         success {
             echo 'Pipeline completed successfully.'
