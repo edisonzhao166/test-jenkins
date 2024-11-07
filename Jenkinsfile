@@ -61,8 +61,8 @@ pipeline {
     post {
         always {
             // Stop and remove Docker containers
-            sh "docker stop $(docker ps -q)"
-            sh "docker rm $(docker ps -aq)"
+            sh 'docker stop $(docker ps -q)'
+            sh 'docker rm $(docker ps -aq)'
         }
         success {
             echo 'Pipeline completed successfully.'
