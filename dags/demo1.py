@@ -4,7 +4,7 @@ from datetime import datetime
 from airflow import DAG
 from airflow.decorators import task
 from airflow.operators.bash import BashOperator
-import pandas as pd
+#import pandas as pd
 from airflow.providers.amazon.aws.transfers.local_to_s3 import LocalFilesystemToS3Operator
 
 # A DAG represents a workflow, a collection of tasks
@@ -26,9 +26,10 @@ with DAG(dag_id="demo1", start_date=datetime(2022, 1, 1), schedule="@once") as d
 
     @task()
     def pd_access():
-        url = 'https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv'
-        df = pd.read_csv(url)
-        df.to_csv("./aaaa.csv", index=False)
+        pass
+        # url = 'https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv'
+        # df = pd.read_csv(url)
+        # df.to_csv("./aaaa.csv", index=False)
 
 
     upload_to_s3 = LocalFilesystemToS3Operator(
