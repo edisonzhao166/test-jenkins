@@ -30,7 +30,7 @@ pipeline {
                 // Trigger the Airflow DAG for model training and evaluation
                 script {
                     sh """
-                    curl -X POST http://localhost:8080/api/v1/dags/demo1/dagRuns \
+                    curl -X POST http://localhost:8081/api/v1/dags/demo1/dagRuns \
                     -H "Content-Type: application/json" \
                     -u airflow:airflow \
                     -d '{"conf":{}}'
