@@ -257,6 +257,7 @@ services:
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}:/sources
 
+
   airflow-cli:
     <<: *airflow-common
     profiles:
@@ -291,6 +292,20 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+#  mlflow:
+#    image: python:3.8
+#    container_name: mlflow
+#    environment:
+#      - MLFLOW_TRACKING_URI=http://0.0.0.0:5000
+#    ports:
+#      - "5000:5000"
+#    volumes:
+#      - ./mlruns:/mlflow/mlruns  # Store runs on the host
+#    command: >
+#      /bin/sh -c "pip install mlflow && mlflow server \
+#                  --backend-store-uri sqlite:///mlflow.db \
+#                  --default-artifact-root /mlflow/mlruns \
+#                  --host 0.0.0.0"
 
 #  jenkins:
 #    image: jenkins/jenkins:jdk17  # Use the Long Term Support version
