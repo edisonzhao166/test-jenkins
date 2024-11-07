@@ -12,7 +12,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clone the GitHub repository
-                git url: "${REPO_URL}", branch: "${BRANCH_NAME}"
+                git url: "${REPO_URL}", branch: "${env.BRANCH_NAME}"
             }
         }
 
@@ -29,12 +29,18 @@ pipeline {
             steps {
                 // Trigger the Airflow DAG for model training and evaluation
                 script {
-                    sh """
-                    curl -X POST http://localhost:8081/api/v1/dags/demo1/dagRuns \
-                    -H "Content-Type: application/json" \
-                    -u airflow:airflow \
-                    -d '{"conf":{}}'
-                    """
+                    def response = sh(
+                        script: '''
+                            curl -X POST http://localhost:8081/api/v1/dags/demo1/dagRuns \
+                            -H "Content-Type: application/json" \
+                            -u airflow:airflow \
+                            -d '{"conf":{}}'
+                        ''',
+                        returnStatus: true
+                    )
+                    if (response != 0) {
+                        error("Failed to trigger Airflow DAG")
+                    }
                 }
             }
         }
