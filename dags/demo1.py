@@ -37,7 +37,7 @@ with DAG(dag_id="demo1", start_date=datetime(2022, 1, 1), schedule="@once") as d
         filename='./output.txt',  # Local file path
         dest_key='your_s3_key/output.txt',  # S3 key (file path in S3)
         dest_bucket='ez2024',  # S3 bucket name
-        aws_conn_id='ez2024',  # AWS connection ID in Airflow
+        aws_conn_id=None,  # AWS connection ID in Airflow
         replace=True  # Replace file if it exists
     )
 
