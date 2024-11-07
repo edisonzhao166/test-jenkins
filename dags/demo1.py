@@ -22,7 +22,7 @@ with DAG(dag_id="demo1", start_date=datetime(2022, 1, 1), schedule="@once") as d
         with open('./output.txt', 'w') as file:
             # Write content to the file
             file.write('Hello, this is a line of text.\n')
-            file.write('Here is another line.')
+            file.write('Here is another line!')
 
     @task()
     def pd_access():
