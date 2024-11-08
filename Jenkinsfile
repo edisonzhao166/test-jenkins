@@ -28,18 +28,19 @@ pipeline {
             steps {
                 // Trigger the Airflow DAG for model training and evaluation
                 script {
-                    def response = sh(
-                        script: '''
-                            curl -X POST http://localhost:8081/api/v1/dags/demo1/dagRuns \
-                            -H \"Content-Type: application/json\" \
-                            -u airflow:airflow \
-                            -d \'{"conf":{}}\'
-                        ''',
-                        returnStatus: true
-                    )
-                    if (response != 0) {
-                        error("Failed to trigger Airflow DAG")
-                    }
+                    sh "docker exec $(docker ps -q --filter \"name=scheduler\") airflow dags trigger demo1"
+//                     def response = sh(
+//                         script: '''
+//                             curl -X POST http://localhost:8081/api/v1/dags/demo1/dagRuns \
+//                             -H \"Content-Type: application/json\" \
+//                             -u airflow:airflow \
+//                             -d \'{"conf":{}}\'
+//                         ''',
+//                         returnStatus: true
+//                     )
+//                     if (response != 0) {
+//                         error("Failed to trigger Airflow DAG")
+//                     }
                 }
             }
         }
@@ -69,7 +70,7 @@ pipeline {
             // Stop and remove Docker containers
             sh 'sudo chmod 666 /var/run/docker.sock'
             sh 'docker ps -q | xargs -r docker stop'
-            sh 'docker ps -aq | xargs -r docker rm'
+            //sh 'docker ps -aq | xargs -r docker rm'
         }
         success {
             echo 'Pipeline completed successfully!'
