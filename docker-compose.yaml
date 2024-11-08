@@ -321,19 +321,19 @@ services:
       JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"  # Disable setup wizard on first start
 
 
-  gitlab:
-    image: gitlab/gitlab-ce:latest
-    container_name: gitlab
-    restart: always
-    hostname: gitlab.example.com  # Change to your desired hostname
-    ports:
-      - "80:80"    # HTTP
-      - "443:443"  # HTTPS
-      - "22:22"    # SSH for Git
-    volumes:
-      - ./config:/etc/gitlab          # GitLab config
-      - ./logs:/var/log/gitlab         # GitLab logs
-      - ./data:/var/opt/gitlab         # GitLab data
+#  gitlab:
+#    image: gitlab/gitlab-ce:latest
+#    container_name: gitlab
+#    restart: always
+#    hostname: gitlab.example.com  # Change to your desired hostname
+#    ports:
+#      - "80:80"    # HTTP
+#      - "443:443"  # HTTPS
+#      - "22:22"    # SSH for Git
+#    volumes:
+#      - ./config:/etc/gitlab          # GitLab config
+#      - ./logs:/var/log/gitlab         # GitLab logs
+#      - ./data:/var/opt/gitlab         # GitLab data
 
 volumes:
   postgres-db-volume:

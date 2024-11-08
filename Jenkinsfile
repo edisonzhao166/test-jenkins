@@ -19,7 +19,7 @@ pipeline {
             steps {
                 // Build and start the containers using docker-compose
                 script {
-                    sh "docker-compose -f ${COMPOSE_FILE} up -d --build"
+                    sh "docker-compose -f ${COMPOSE_FILE} up -d "
                 }
             }
         }
