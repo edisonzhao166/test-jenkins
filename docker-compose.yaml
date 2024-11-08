@@ -163,9 +163,9 @@ services:
           memory: 4g # Set the memory limit (e.g., 512MB)
 
     environment:
-      - AWS_ACCESS_KEY_ID = 'AKIATHVQLMYJPPCZTEIQ'
-      - AWS_SECRET_ACCESS_KEY='aZgmerJr83kk19eJtfcDqAg0bgkV6VgLygBi5cpI'
-      - AWS_DEFAULT_REGION="us-west-2"
+      AWS_ACCESS_KEY_ID: 'AKIATHVQLMYJPPCZTEIQ'
+      AWS_SECRET_ACCESS_KEY: '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'
+      AWS_DEFAULT_REGION: "us-west-2"
 
   airflow-worker:
     <<: *airflow-common
