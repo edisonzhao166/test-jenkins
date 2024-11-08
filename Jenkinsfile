@@ -28,7 +28,7 @@ pipeline {
             steps {
                 // Trigger the Airflow DAG for model training and evaluation
                 script {
-                    sh 'docker exec test-jenkins-airflow-scheduler-1 airflow dags trigger demo1'
+                    sh 'docker exec test-jenkins-airflow-scheduler airflow dags trigger demo1'
 //                     def response = sh(
 //                         script: '''
 //                             curl -X POST http://localhost:8081/api/v1/dags/demo1/dagRuns \
@@ -69,6 +69,7 @@ pipeline {
         always {
             // Stop and remove Docker containers
             //sh 'sudo chmod 666 /var/run/docker.sock'
+            sh 'docker ps'
             sh 'docker ps -q | xargs -r docker stop'
             sh 'docker ps -aq | xargs -r docker rm'
         }
