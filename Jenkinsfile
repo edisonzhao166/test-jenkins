@@ -68,7 +68,7 @@ pipeline {
     post {
         always {
             // Stop and remove Docker containers
-            sh 'sudo chmod 666 /var/run/docker.sock'
+            //sh 'sudo chmod 666 /var/run/docker.sock'
             sh 'docker ps -q | xargs -r docker stop'
             sh 'docker ps -aq | xargs -r docker rm'
         }

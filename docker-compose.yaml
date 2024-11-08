@@ -88,6 +88,7 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+  docker_prune: true
   airflow-python:
     <<: *airflow-common
     profiles:
@@ -96,6 +97,7 @@ services:
         <<: *airflow-common-env
     user: "50000:0"
     entrypoint: [ "/bin/bash", "-c" ]
+    restart: always
   postgres:
     image: postgres:13
     environment:
