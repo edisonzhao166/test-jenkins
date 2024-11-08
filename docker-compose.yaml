@@ -157,6 +157,10 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 4g # Set the memory limit (e.g., 512MB)
 
   airflow-worker:
     <<: *airflow-common
