@@ -87,6 +87,10 @@ x-airflow-common:
     postgres:
       condition: service_healthy
 
+networks:
+  airflow-network:
+    driver: bridge
+
 services:
   airflow-python:
     <<: *airflow-common
@@ -97,6 +101,8 @@ services:
     user: "50000:0"
     entrypoint: [ "/bin/bash", "-c" ]
     restart: always
+    networks:
+      - airflow-network
   postgres:
     image: postgres:13
     environment:
@@ -111,6 +117,8 @@ services:
       retries: 5
       start_period: 5s
     restart: always
+    networks:
+      - airflow-network
 
   redis:
     # Redis is limited to 7.2-bookworm due to licencing change
@@ -125,6 +133,8 @@ services:
       retries: 50
       start_period: 30s
     restart: always
+    networks:
+      - airflow-network
 
   airflow-webserver:
     <<: *airflow-common
@@ -142,6 +152,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    networks:
+      - airflow-network
 
   airflow-scheduler:
     <<: *airflow-common
@@ -161,6 +173,8 @@ services:
       resources:
         limits:
           memory: 4g # Set the memory limit (e.g., 512MB)
+    networks:
+      - airflow-network
 
   airflow-worker:
     <<: *airflow-common
@@ -184,6 +198,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    networks:
+      - airflow-network
 
   airflow-triggerer:
     <<: *airflow-common
@@ -199,6 +215,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    networks:
+      - airflow-network
 
   airflow-init:
     <<: *airflow-common
@@ -263,7 +281,8 @@ services:
     user: "0:0"
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}:/sources
-
+    networks:
+      - airflow-network
 
   airflow-cli:
     <<: *airflow-common
