@@ -28,7 +28,7 @@ pipeline {
             steps {
                 // Trigger the Airflow DAG for model training and evaluation
                 script {
-                    sh 'docker exec test-jenkins-airflow-scheduler airflow dags trigger demo1'
+                    sh 'docker exec 1108-2_ci5-airflow-scheduler-1 airflow dags trigger demo1'
 //                     def response = sh(
 //                         script: '''
 //                             curl -X POST http://localhost:8081/api/v1/dags/demo1/dagRuns \
