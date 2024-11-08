@@ -5,9 +5,6 @@ pipeline {
         REPO_URL = 'https://github.com/edisonzhao166/test-jenkins.git' // Replace with your repo URL
         AIRFLOW_DAG_ID = 'demo1' // Replace with your Airflow DAG ID
         COMPOSE_FILE = 'docker-compose.yaml' // Name of the docker-compose file
-        AWS_ACCESS_KEY_ID = credentials('AKIATHVQLMYJPPCZTEIQ')
-        AWS_SECRET_ACCESS_KEY = credentials('aZgmerJr83kk19eJtfcDqAg0bgkV6VgLygBi5cpI')
-        AWS_DEFAULT_REGION = 'us-west-2' // Example region
     }
 
     stages {
