@@ -31,9 +31,9 @@ pipeline {
                     def response = sh(
                         script: '''
                             curl -X POST http://localhost:8081/api/v1/dags/demo1/dagRuns \
-                            -H "Content-Type: application/json" \
+                            -H \"Content-Type: application/json\" \
                             -u airflow:airflow \
-                            -d '{"conf":{}}'
+                            -d \'{"conf":{}}\'
                         ''',
                         returnStatus: true
                     )
