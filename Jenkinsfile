@@ -31,6 +31,21 @@ pipeline {
                     sh 'docker exec -u root 1108-2_ci5-airflow-scheduler-1 mkdir -p /opt/airflow/logs/scheduler'
                     sh 'docker exec -u root 1108-2_ci5-airflow-scheduler-1 chown -R airflow:root /opt/airflow/logs'
                     //sh 'docker exec 1108-2_ci5-airflow-scheduler-1 airflow db init'
+
+                    withCredentials([
+                        string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY'),
+                        string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_KEY')
+                    ]) {
+                        sh """
+                            docker exec 1108-2_ci5-airflow-scheduler-1 airflow connections delete aws_default || true
+                            docker exec 1108-2_ci5-airflow-scheduler-1 airflow connections add 'aws_default' \
+                                --conn-type 'aws' \
+                                --conn-login '${AWS_ACCESS_KEY}' \
+                                --conn-password '${AWS_SECRET_KEY}' \
+                                --conn-extra '{"region_name": "us-west-2"}'
+                        """
+                    }
+
                     sh 'docker exec 1108-2_ci5-airflow-scheduler-1 airflow dags trigger demo1'
 //                     def response = sh(
 //                         script: '''
