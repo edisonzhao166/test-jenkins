@@ -5,14 +5,13 @@ pipeline {
         REPO_URL = 'https://github.com/edisonzhao166/test-jenkins.git' // Replace with your repo URL
         AIRFLOW_DAG_ID = 'demo1' // Replace with your Airflow DAG ID
         COMPOSE_FILE = 'docker-compose.yaml' // Name of the docker-compose file
-        BRANCH_NAME = 'ci4'
     }
 
     stages {
         stage('Checkout') {
             steps {
                 // Clone the GitHub repository
-                git url: "${REPO_URL}", branch: "${BRANCH_NAME}"
+                git url: "${REPO_URL}", credentialsId: 'github-pat', branch: "${env.BRANCH_NAME}"
             }
         }
 
@@ -29,12 +28,19 @@ pipeline {
             steps {
                 // Trigger the Airflow DAG for model training and evaluation
                 script {
-                    sh """
-                    curl -X POST http://localhost:8081/api/v1/dags/demo1/dagRuns \
-                    -H "Content-Type: application/json" \
-                    -u airflow:airflow \
-                    -d '{"conf":{}}'
-                    """
+                    sh 'docker exec test-jenkins-airflow-scheduler-1 airflow dags trigger demo1'
+//                     def response = sh(
+//                         script: '''
+//                             curl -X POST http://localhost:8081/api/v1/dags/demo1/dagRuns \
+//                             -H \"Content-Type: application/json\" \
+//                             -u airflow:airflow \
+//                             -d \'{"conf":{}}\'
+//                         ''',
+//                         returnStatus: true
+//                     )
+//                     if (response != 0) {
+//                         error("Failed to trigger Airflow DAG")
+//                     }
                 }
             }
         }
@@ -62,11 +68,12 @@ pipeline {
     post {
         always {
             // Stop and remove Docker containers
+            //sh 'sudo chmod 666 /var/run/docker.sock'
             sh 'docker ps -q | xargs -r docker stop'
             sh 'docker ps -aq | xargs -r docker rm'
         }
         success {
-            echo 'Pipeline completed successfully.'
+            echo 'Pipeline completed successfully!'
         }
         failure {
             echo 'Pipeline failed. Check logs for details!!!!!!'

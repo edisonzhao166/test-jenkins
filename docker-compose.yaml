@@ -88,6 +88,7 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+  docker_prune: true
   airflow-python:
     <<: *airflow-common
     profiles:
@@ -96,6 +97,7 @@ services:
         <<: *airflow-common-env
     user: "50000:0"
     entrypoint: [ "/bin/bash", "-c" ]
+    restart: always
   postgres:
     image: postgres:13
     environment:
@@ -129,9 +131,9 @@ services:
     <<: *airflow-common
     command: webserver
     ports:
-      - "8081:8080"
+      - "8082:8080"
     healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      test: ["CMD", "curl", "--fail", "http://localhost:8082/health"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -294,31 +296,49 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+
 #  mlflow:
-#    image: python:3.8
-#    container_name: mlflow
+#    image: ghcr.io/mlflow/mlflow
 #    environment:
-#      - MLFLOW_TRACKING_URI=http://0.0.0.0:5000
+#      - MLFLOW_TRACKING_URI=http://mlflow:5000
+#      - MLFLOW_ARTIFACT_ROOT=/mlflow/artifacts
 #    ports:
 #      - "5000:5000"
 #    volumes:
-#      - ./mlruns:/mlflow/mlruns  # Store runs on the host
-#    command: >
-#      /bin/sh -c "pip install mlflow && mlflow server \
-#                  --backend-store-uri sqlite:///mlflow.db \
-#                  --default-artifact-root /mlflow/mlruns \
-#                  --host 0.0.0.0"
-
+#      - /Users/xuzhao/PycharmProjects/test-jenkins/mlflow/artifacts:/mlflow/artifacts  # Absolute path for artifact storage
+#      - /Users/xuzhao/PycharmProjects/test-jenkins/mlflow/mlflow.db:/mlflow/mlflow.db  # Absolute path for SQLite DB
+#    command: mlflow server --backend-store-uri sqlite:///mlflow/mlflow.db --default-artifact-root /mlflow/artifacts --host 0.0.0.0
 #  jenkins:
 #    image: jenkins/jenkins:jdk17  # Use the Long Term Support version
 #    container_name: jenkins
 #    ports:
-#      - "9090:9090"  # Jenkins web interface
+#      - "9090:8080"  # Jenkins web interface
 #      - "50000:50000"  # Jenkins agent connections
 ##    volumes:
 ##      - jenkins_home:/var/jenkins_home  # Persistent storage for Jenkins data
 #    environment:
 #      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"  # Disable setup wizard on first start
+
+
+#  services:
+#    gitlab:
+#      image: gitlab/gitlab-ce:13.6.5-ce.0
+#      ports:
+#        - 8929:80
+
+#  gitlab:
+#    image: gitlab/gitlab-ce:latest
+#    container_name: gitlab
+#    restart: always
+#    hostname: localhost  # Change to your desired hostname
+#    ports:
+#      - "80:80"    # HTTP
+#      - "443:443"  # HTTPS
+#      - "22:22"    # SSH for Git
+#    volumes:
+#      - ./config:/etc/gitlab          # GitLab config
+#      - ./logs:/var/log/gitlab         # GitLab logs
+#      - ./data:/var/opt/gitlab         # GitLab data
 
 volumes:
   postgres-db-volume:
