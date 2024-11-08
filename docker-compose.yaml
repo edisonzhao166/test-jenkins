@@ -88,7 +88,6 @@ x-airflow-common:
       condition: service_healthy
 
 services:
-  docker_prune: true
   airflow-python:
     <<: *airflow-common
     profiles:

@@ -2,6 +2,10 @@ pipeline {
     agent any
 
     environment {
+        GITHUB_CREDENTIALS = credentials('github-pat')  // Use the ID you created
+    }
+
+    environment {
         REPO_URL = 'https://github.com/edisonzhao166/test-jenkins.git' // Replace with your repo URL
         AIRFLOW_DAG_ID = 'demo1' // Replace with your Airflow DAG ID
         COMPOSE_FILE = 'docker-compose.yaml' // Name of the docker-compose file
