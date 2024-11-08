@@ -74,7 +74,7 @@ pipeline {
             sh 'docker ps -aq | xargs -r docker rm'
         }
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'Pipeline completed successfully!!'
         }
         failure {
             echo 'Pipeline failed. Check logs for details!!!!!!'
