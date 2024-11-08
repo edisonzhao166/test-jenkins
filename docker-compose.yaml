@@ -309,16 +309,31 @@ services:
 #                  --default-artifact-root /mlflow/mlruns \
 #                  --host 0.0.0.0"
 #
-#  jenkins:
-#    image: jenkins/jenkins:jdk17  # Use the Long Term Support version
-#    container_name: jenkins
-#    ports:
-#      - "9090:8080"  # Jenkins web interface
-#      - "50000:50000"  # Jenkins agent connections
-##    volumes:
-##      - jenkins_home:/var/jenkins_home  # Persistent storage for Jenkins data
-#    environment:
-#      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"  # Disable setup wizard on first start
+  jenkins:
+    image: jenkins/jenkins:jdk17  # Use the Long Term Support version
+    container_name: jenkins
+    ports:
+      - "9090:8080"  # Jenkins web interface
+      - "50000:50000"  # Jenkins agent connections
+#    volumes:
+#      - jenkins_home:/var/jenkins_home  # Persistent storage for Jenkins data
+    environment:
+      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"  # Disable setup wizard on first start
+
+
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    restart: always
+    hostname: gitlab.example.com  # Change to your desired hostname
+    ports:
+      - "80:80"    # HTTP
+      - "443:443"  # HTTPS
+      - "22:22"    # SSH for Git
+    volumes:
+      - ./config:/etc/gitlab          # GitLab config
+      - ./logs:/var/log/gitlab         # GitLab logs
+      - ./data:/var/opt/gitlab         # GitLab data
 
 volumes:
   postgres-db-volume:
