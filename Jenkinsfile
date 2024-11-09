@@ -28,8 +28,10 @@ pipeline {
             steps {
                 // Trigger the Airflow DAG for model training and evaluation
                 script {
-                    sh 'docker exec -u root 1108-2_ci5-airflow-scheduler-1 mkdir -p /opt/airflow/logs/scheduler'
-                    sh 'docker exec -u root 1108-2_ci5-airflow-scheduler-1 chown -R airflow:root /opt/airflow/logs'
+                    sh 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 mkdir -p /opt/airflow/logs/'
+                    sh 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 mkdir -p /opt/airflow/logs/scheduler'
+                    sh 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 chown -R airflow:root /opt/airflow/logs'
+                    sh 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 chown -R airflow:root /opt/airflow/logs/scheduler'
                     //sh 'docker exec 1108-2_ci5-airflow-scheduler-1 airflow db init'
 
 
@@ -39,14 +41,14 @@ pipeline {
                     ]) {
                         sh """
 
-                            docker exec 1108-2_ci5-airflow-scheduler-1 airflow connections delete aws_default || true
+                            docker exec 1108-3_ci5-airflow-scheduler-1 airflow connections delete aws_default || true
 
-                            docker exec 1108-2_ci5-airflow-worker-1 airflow connections add 'aws_default' \
+                            docker exec 1108-3_ci5-airflow-worker-1 airflow connections add 'aws_default' \
                                 --conn-type 'Amazon Web Services' \
                                 --conn-login '${AWS_ACCESS_KEY}' \
                                 --conn-password '${AWS_SECRET_KEY}' \
                                 --conn-extra '{"region_name": "us-west-2"}'
-                            docker exec 1108-2_ci5-airflow-scheduler-1 airflow dags trigger demo1
+                            docker exec 1108-3_ci5-airflow-scheduler-1 airflow dags trigger demo1
 
                         """
                     }
