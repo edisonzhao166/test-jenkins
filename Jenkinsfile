@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clone the GitHub repository
-                git url: "${REPO_URL}", credentialsId: 'github-pat', branch: "${env.BRANCH_NAME}"
+                git url: "${REPO_URL}", branch: "${env.BRANCH_NAME}"
             }
         }
 
@@ -28,7 +28,34 @@ pipeline {
             steps {
                 // Trigger the Airflow DAG for model training and evaluation
                 script {
-                    sh 'docker exec test-jenkins-airflow-scheduler-1 airflow dags trigger demo1'
+                    //sh 'docker exec 1108-2_ci5-airflow-scheduler-1 airflow db init'
+
+
+                    withCredentials([
+                        string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY'),
+                        string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_KEY')
+                    ]) {
+                        sh """
+                            /bin/sh -c 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 mkdir -p /opt/airflow/logs/'
+                            /bin/sh -c 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 mkdir -p /opt/airflow/logs/scheduler'
+                            /bin/sh -c 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 chown -R airflow:root /opt/airflow/logs'
+                            /bin/sh -c 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 chown -R airflow:root /opt/airflow/logs/scheduler'
+
+                            /bin/sh -c 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 sed -i "s/^executor = .*/executor = LocalExecutor/" /opt/airflow/airflow.cfg'
+
+                            docker exec 1108-3_ci5-airflow-scheduler-1 airflow connections delete aws_default || true
+
+                            docker exec 1108-3_ci5-airflow-worker-1 airflow connections add 'aws_default' \
+                                --conn-type 'Amazon Web Services' \
+                                --conn-login '${AWS_ACCESS_KEY}' \
+                                --conn-password '${AWS_SECRET_KEY}' \
+                                --conn-extra '{"region_name": "us-west-2"}'
+                            docker exec 1108-3_ci5-airflow-scheduler-1 airflow dags trigger demo1
+
+                        """
+                    }
+
+                    //sh 'docker exec 1108-2_ci5-airflow-scheduler-1 airflow dags trigger demo1'
 //                     def response = sh(
 //                         script: '''
 //                             curl -X POST http://localhost:8081/api/v1/dags/demo1/dagRuns \
@@ -69,11 +96,12 @@ pipeline {
         always {
             // Stop and remove Docker containers
             //sh 'sudo chmod 666 /var/run/docker.sock'
-            sh 'docker ps -q | xargs -r docker stop'
-            sh 'docker ps -aq | xargs -r docker rm'
+            sh 'docker ps'
+            //sh 'docker ps -q | xargs -r docker stop'
+            //sh 'docker ps -aq | xargs -r docker rm'
         }
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'Pipeline completed successfully!!!'
         }
         failure {
             echo 'Pipeline failed. Check logs for details!!!!!!'
