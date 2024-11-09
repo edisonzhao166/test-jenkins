@@ -38,7 +38,8 @@ pipeline {
                     ]) {
                         sh """
                             docker exec 1108-2_ci5-airflow-scheduler-1 airflow connections delete aws_default || true
-                            docker exec 1108-2_ci5-airflow-scheduler-1 airflow connections add 'aws_default' \
+
+                            docker exec 1108-2_ci5-airflow-worker-1 airflow connections add 'aws_default' \
                                 --conn-type 'Amazon Web Services' \
                                 --conn-login 'AKIATHVQLMYJFBWJN3X2' \
                                 --conn-password 'ymsXH3aoY9Z20blMVXWK7tzLEi1fMKh+nxFBgF0B' \
