@@ -36,10 +36,10 @@ pipeline {
                         string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_KEY')
                     ]) {
                         sh """
-                            sh 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 mkdir -p /opt/airflow/logs/'
-                            sh 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 mkdir -p /opt/airflow/logs/scheduler'
-                            sh 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 chown -R airflow:root /opt/airflow/logs'
-                            sh 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 chown -R airflow:root /opt/airflow/logs/scheduler'
+                            /bin/sh -c 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 mkdir -p /opt/airflow/logs/'
+                            /bin/sh -c 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 mkdir -p /opt/airflow/logs/scheduler'
+                            /bin/sh -c 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 chown -R airflow:root /opt/airflow/logs'
+                            /bin/sh -c 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 chown -R airflow:root /opt/airflow/logs/scheduler'
 
 
                             docker exec 1108-3_ci5-airflow-scheduler-1 airflow connections delete aws_default || true
