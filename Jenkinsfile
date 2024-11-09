@@ -33,13 +33,13 @@ pipeline {
                     //sh 'docker exec 1108-2_ci5-airflow-scheduler-1 airflow db init'
                     sh """
                         # Create the logs directory if it doesn't exist
-                        sudo mkdir -p /opt/airflow/logs
+                        mkdir -p /opt/airflow/logs
 
                         # Set ownership to the airflow user and group
-                        sudo chown -R airflow:airflow /opt/airflow/logs
+                        chown -R airflow:airflow /opt/airflow/logs
 
                         # Set proper permissions (755 allows read/write for owner, read/execute for others)
-                        sudo chmod -R 755 /opt/airflow/logs
+                        chmod -R 755 /opt/airflow/logs
                     """
 
                     withCredentials([
@@ -56,7 +56,7 @@ pipeline {
                                 --conn-password '${AWS_SECRET_KEY}' \
                                 --conn-extra '{"region_name": "us-west-2"}'
                             docker exec 1108-2_ci5-airflow-scheduler-1 airflow dags trigger demo1
-                            sleep 5m
+
                         """
                     }
 
