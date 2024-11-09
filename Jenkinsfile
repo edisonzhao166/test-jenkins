@@ -41,7 +41,7 @@ pipeline {
                             /bin/sh -c 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 chown -R airflow:root /opt/airflow/logs'
                             /bin/sh -c 'docker exec -u root 1108-3_ci5-airflow-scheduler-1 chown -R airflow:root /opt/airflow/logs/scheduler'
 
-                            /bin/sh -c 'sed -i 's/^executor = .*/executor = LocalExecutor/' /opt/airflow/airflow.cfg'
+                            /bin/sh -c 'sed -i "s/^executor = .*/executor = LocalExecutor/" /opt/airflow/airflow.cfg'
 
                             docker exec 1108-3_ci5-airflow-scheduler-1 airflow connections delete aws_default || true
 
