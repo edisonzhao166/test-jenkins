@@ -31,11 +31,7 @@ pipeline {
                     sh 'docker exec -u root 1108-2_ci5-airflow-scheduler-1 mkdir -p /opt/airflow/logs/scheduler'
                     sh 'docker exec -u root 1108-2_ci5-airflow-scheduler-1 chown -R airflow:root /opt/airflow/logs'
                     //sh 'docker exec 1108-2_ci5-airflow-scheduler-1 airflow db init'
-                    sh """
-                        mkdir -p /opt/airflow/logs
-                        chown -R $(id -u):$(id -g) /opt/airflow/logs
-                        chmod -R 755 /opt/airflow/logs
-                    """
+
 
                     withCredentials([
                         string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY'),
