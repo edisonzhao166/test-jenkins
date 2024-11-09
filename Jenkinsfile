@@ -45,6 +45,7 @@ pipeline {
                                 --conn-password 'ymsXH3aoY9Z20blMVXWK7tzLEi1fMKh+nxFBgF0B' \
                                 --conn-extra '{"region_name": "us-west-2"}'
                             docker exec 1108-2_ci5-airflow-scheduler-1 airflow dags trigger demo1
+                            sleep 5m
                         """
                     }
 
