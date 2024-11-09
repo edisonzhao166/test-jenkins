@@ -32,17 +32,9 @@ pipeline {
                     sh 'docker exec -u root 1108-2_ci5-airflow-scheduler-1 chown -R airflow:root /opt/airflow/logs'
                     //sh 'docker exec 1108-2_ci5-airflow-scheduler-1 airflow db init'
                     sh """
-                        # Create the airflow group
-                        sudo groupadd airflow
-
-                        # Create the airflow user and add it to the airflow group
-                        sudo useradd -g airflow airflow
-
-                        # Now set the ownership
-                        sudo chown -R airflow:airflow /opt/airflow/logs
-
-                        # Set proper permissions
-                        sudo chmod -R 755 /opt/airflow/logs
+                        mkdir -p /opt/airflow/logs
+                        chown -R $(id -u):$(id -g) /opt/airflow/logs
+                        chmod -R 755 /opt/airflow/logs
                     """
 
                     withCredentials([
